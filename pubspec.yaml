@@ -1,7 +1,7 @@
 name: ipes_8ch_dwin_logger
-description: IPES dedicated 8-channel analog data logger HMI for DWIN DMG80480T050_32WTC.
+description: IPES dedicated 8-channel analog data logger HMI for DWIN DMG80480T050_32WTC, based on the supplied 5-inch IPES HMI workflow.
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.1.0+2
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
