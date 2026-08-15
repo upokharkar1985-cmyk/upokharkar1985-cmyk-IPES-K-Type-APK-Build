@@ -47,6 +47,44 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Repair legacy usb_serial Android build for current Flutter
+        shell: bash
+        run: |
+          echo "android.newDsl=false" >> android/gradle.properties
+          PLUGIN_DIR="$HOME/.pub-cache/hosted/pub.dev/usb_serial-0.5.2/android"
+          cat > "$PLUGIN_DIR/build.gradle" <<'GRADLE'
+          group 'dev.bessems.usbserial'
+          version '1.0'
+
+          rootProject.allprojects {
+              repositories {
+                  google()
+                  mavenCentral()
+                  maven { url "https://jitpack.io" }
+              }
+          }
+
+          apply plugin: 'com.android.library'
+
+          android {
+              namespace 'dev.bessems.usbserial'
+              compileSdk 35
+
+              defaultConfig {
+                  minSdk 21
+              }
+
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_1_8
+                  targetCompatibility JavaVersion.VERSION_1_8
+              }
+          }
+
+          dependencies {
+              implementation 'com.github.felHR85:UsbSerial:6.1.0'
+          }
+          GRADLE
+
       - name: Build ARM64 release APK
         run: flutter build apk --release --target-platform android-arm64
 
