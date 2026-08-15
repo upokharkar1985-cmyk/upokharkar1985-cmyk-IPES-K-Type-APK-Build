@@ -89,12 +89,12 @@ jobs:
         run: flutter build apk --release --target-platform android-arm64
 
       - name: Prepare named APK
-        run: cp build/app/outputs/flutter-apk/app-release.apk IPES_8CH_DWIN_Android_v1.0.apk
+        run: cp build/app/outputs/flutter-apk/app-release.apk IPES_8CH_DWIN_Android_v1.1.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: IPES_8CH_DWIN_Android_v1.0_APK
-          path: IPES_8CH_DWIN_Android_v1.0.apk
+          name: IPES_8CH_DWIN_Android_v1.1_APK
+          path: IPES_8CH_DWIN_Android_v1.1.apk
           if-no-files-found: error
           retention-days: 30
