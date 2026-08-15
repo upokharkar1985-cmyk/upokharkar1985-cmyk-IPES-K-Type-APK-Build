@@ -1,0 +1,21 @@
+name: ipes_8ch_dwin_logger
+description: IPES dedicated 8-channel analog data logger HMI for DWIN DMG80480T050_32WTC.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  usb_serial: ^0.5.2
+  shared_preferences: ^2.2.3
+  path_provider: ^2.1.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
