@@ -1,0 +1,62 @@
+name: Build IPES 8CH DWIN APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Flutter stable
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Generate Android platform files
+        run: flutter create --platforms=android --org com.ipes --project-name ipes_8ch_dwin_logger .
+
+      - name: Configure DWIN USB host and landscape
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('android/app/src/main/AndroidManifest.xml')
+          s = p.read_text()
+          if 'android.hardware.usb.host' not in s:
+              s = s.replace('<manifest xmlns:android="http://schemas.android.com/apk/res/android">', '<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n    <uses-feature android:name="android.hardware.usb.host" android:required="true" />')
+          if 'android:screenOrientation=' not in s:
+              s = s.replace('android:name=".MainActivity"', 'android:name=".MainActivity"\n            android:screenOrientation="landscape"')
+          p.write_text(s)
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build ARM64 release APK
+        run: flutter build apk --release --target-platform android-arm64
+
+      - name: Prepare named APK
+        run: cp build/app/outputs/flutter-apk/app-release.apk IPES_8CH_DWIN_Android_v1.0.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IPES_8CH_DWIN_Android_v1.0_APK
+          path: IPES_8CH_DWIN_Android_v1.0.apk
+          if-no-files-found: error
+          retention-days: 30
