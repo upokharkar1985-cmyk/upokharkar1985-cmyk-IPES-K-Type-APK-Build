@@ -5,6 +5,7 @@ class LoggerFrame {
   final double? batteryPercent;
   final String powerSource;
   final double? sampleRate;
+  final double? memoryKb;
 
   const LoggerFrame({
     required this.timestamp,
@@ -13,6 +14,7 @@ class LoggerFrame {
     this.batteryPercent,
     this.powerSource = 'UNKNOWN',
     this.sampleRate,
+    this.memoryKb,
   });
 
   factory LoggerFrame.empty() => LoggerFrame(
@@ -52,6 +54,7 @@ class LoggerFrame {
       batteryPercent: number('BCAP') ?? number('BATSOC'),
       powerSource: power,
       sampleRate: number('SRATE') ?? number('SPS'),
+      memoryKb: number('MEMKB') ?? number('MEM') ?? number('MEMORY'),
     );
   }
 }
